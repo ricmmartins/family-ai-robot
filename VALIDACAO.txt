@@ -1,0 +1,51 @@
+ESTADO DE VALIDACAO - 24/10/2026
+
+EXECUTADO
+- Leitura das 11 paginas do PDF original.
+- Consulta de documentacao Seeed, Adafruit, Espressif e fontes XiaoZhi.
+- Confirmacao documental do SH1106 pelas capturas do anuncio exato.
+- Download da revisao upstream f443114fe7c3fa26b10d3630090119891cd1c4fd.
+- Aplicacao real dos patches com verificacao SHA256 das preimagens.
+- Descoberta da nova placa pelo script upstream de listagem.
+- Oito testes Python de preparacao, manifesto, empacotamento e lockfile
+  aprovados.
+- Analise sintatica PowerShell de build.ps1 e flash.ps1 aprovada.
+- Compilacao C++ do teste da politica de servos com g++,
+  -Wall -Wextra -Werror; execucao das assercoes aprovada.
+- Compilacao e link de TODO o firmware com ESP-IDF v6.0.1, GCC Xtensa
+  esp-15.2.0_20251204, CMake 3.30.9 e Ninja 1.11.1.4 no Linux/WSL.
+- Corrigido reset_gpio_num para GPIO_NUM_NC, exigido pelo tipo do SDK.
+  Removida configuracao LEDC intr_type depreciada.
+- Build final aprovado sem avisos no log incremental final.
+- Imagem de aplicacao inspecionada por esptool 5.6.0:
+  ESP32-S3, versao 2.5.3, flash 8MB, DIO, 80MHz;
+  checksum e hash internos validos.
+- Aplicacao: 2.493.152 bytes, particao de 3.080.192 bytes;
+  587.040 bytes livres (aproximadamente 19%).
+- Imagem mesclada: 6.561.337 bytes, cabe na flash de 8MiB.
+- SHA256 de firmware-built\robot.bin:
+  ae36a2f49c993b4a8cb4d4aa0514ca24aa0b936c6c28160d1b8f98881e71b91c
+- Configuracao real e dependencies.lock preservados no pacote.
+
+PENDENTE
+- Medicao de heap/PSRAM livres e estabilidade em execucao.
+- Gravacao e inicializacao em uma XIAO real.
+- Qualidade de audio, imagem, display e movimento nas unidades compradas.
+- Ativacao da placa personalizada e visao numa conta xiaozhi.me.
+- Corrente, temperatura e estabilidade das fontes e montagem reais.
+- Rede, permissoes e politicas da escola.
+
+HA BINARIO COMPILADO PARA ENSAIO EM BANCADA
+O pacote contem firmware-built\robot.bin, imagem mesclada para offset 0x0,
+mais codigo-fonte e instrucoes opcionais de recompilacao.
+A compilacao foi aprovada; o funcionamento fisico destas unidades NAO.
+Nao substituir robot.bin por binario de outra placa.
+
+As dependencias transitivas do upstream usam faixas de versao. O pacote
+preserva a resolucao real em dependencies.lock e a reutiliza ao preparar
+o fonte. Isso nao promete reproducao byte a byte entre sistemas/toolchains.
+
+O guia nao promete seguranca certificada, adequacao escolar automatica,
+funcionamento da LiPo, respostas corretas da IA ou disponibilidade eterna
+do servico externo. A primeira versao e de mesa, alimentada por fontes,
+sem computador ligado durante a operacao.

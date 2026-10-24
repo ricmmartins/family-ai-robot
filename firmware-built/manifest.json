@@ -1,0 +1,6 @@
+{
+  "revision": "f443114fe7c3fa26b10d3630090119891cd1c4fd",
+  "board": "xiao-family-robot",
+  "sha256": "ae36a2f49c993b4a8cb4d4aa0514ca24aa0b936c6c28160d1b8f98881e71b91c",
+  "idf": "v6.0.1"
+}

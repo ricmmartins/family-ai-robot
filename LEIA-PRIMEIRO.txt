@@ -1,0 +1,70 @@
+ROBO DE MESA: PACOTE DE MONTAGEM E CODIGO
+Projeto educativo em familia. Robo em ingles, autonomo por Wi-Fi.
+
+Abra guia-completo.pdf primeiro. Este pacote substitui o procedimento
+original da Muse.Ai; nao misture a pinagem dos dois documentos.
+
+Versao final proposta:
+- XIAO ESP32-S3 Sense, microfone PDM, camera integrada.
+- OLED SH1106 I2C 128x64.
+- MAX98357 + UM alto-falante 4 ohms.
+- Pan-tilt Adafruit 1967; motor de pan em D3/GPIO4,
+  tilt em D5/GPIO6 (NAO GPIO3).
+- Botao adicional entre D7/GPIO44 e GND para habilitar/testar movimentos.
+- Conversa por botao BOOT, sem wake word nesta primeira versao.
+- IA na nuvem XiaoZhi; conta e acesso ao servico sujeitos aos termos atuais.
+- Alimentacao de bancada por USB + fonte separada para os servos.
+- LiPo comprada fica desconectada nesta versao. Nao corte seu conector.
+
+AUTONOMO NAO SIGNIFICA NECESSARIAMENTE A BATERIA:
+O computador e usado para preparar/gravar o firmware. Depois disso o robo
+funciona com alimentacao eletrica e Wi-Fi, sem computador ligado.
+A LiPo nao faz parte da montagem aprovada neste pacote. Uma versao com
+ela exige outro projeto de alimentacao, ainda nao validado.
+
+ARQUIVOS
+board\                 Implementacao personalizada da placa.
+prepare_source.py      Baixa uma revisao fixada do XiaoZhi e integra a placa.
+firmware-built\        Binario compilado, hash, configuracao e lockfile.
+build.ps1              Recompila no terminal ESP-IDF 6.0.1, se desejado.
+package_firmware.py    Guarda binario, configuracao, lockfile e hash.
+flash.ps1              Grava o binario compilado na porta COM informada.
+tests\                 Testes da preparacao e da politica de movimentos.
+VALIDACAO.txt          Evidencias e limites da verificacao realizada.
+NOTICE.txt             Creditos e licenca MIT dos padroes upstream utilizados.
+
+ORDEM NO WINDOWS: USAR O BINARIO INCLUIDO
+1. Extrair o pacote em caminho curto, por exemplo C:\robot.
+2. Usar Python 3.11 ou 3.12. Nao precisa instalar ESP-IDF para gravar.
+3. Em PowerShell comum, preparar ferramenta isolada:
+   Set-Location C:\robot
+   python -m venv .venv
+   .\.venv\Scripts\python.exe -m pip install esptool==5.6.0
+4. Montar display e audio com tudo DESLIGADO, conforme o PDF.
+   Deixar servos e bateria desconectados.
+5. Entrar em modo BOOT e gravar, trocando COM5 pela porta real:
+   powershell -ExecutionPolicy Bypass -File .\flash.ps1 -Port COM5
+6. Seguir os pontos de controle do PDF em ordem.
+
+RECOMPILACAO OPCIONAL
+No terminal ESP-IDF 6.0.1 PowerShell:
+Set-Location C:\robot
+python .\prepare_source.py
+powershell -ExecutionPolicy Bypass -File .\build.ps1
+A preparacao reaproveita o dependencies.lock incluido.
+
+O firmware completo compilou e passou pelo link com ESP-IDF 6.0.1.
+A imagem ESP32-S3 foi inspecionada: checksum e hash internos validos,
+flash 8MB/DIO e aplicacao dentro da particao. Isso NAO e teste fisico.
+Ativacao em nuvem, audio, camera, OLED e motores ainda exigem ensaio real.
+
+O codigo fornecido NAO e o binario AI Pin do PDF original.
+Os scripts PowerShell nao exigem mudar permanentemente a politica do Windows.
+No terminal ESP-IDF, pode usar & .\build.ps1 se a politica ja permitir.
+
+SEGURANCA
+Nao alimentar motores por 3V3. Nunca ligar SPK- ao GND.
+Nunca unir os positivos de fontes diferentes.
+Desligar a fonte dos servos antes de desligar a placa.
+Habilitacao por software NAO substitui corte fisico da energia dos motores.
+Nao existe garantia de 100% nem validacao fisica destas unidades.

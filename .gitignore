@@ -1,0 +1,17 @@
+work/
+.venv/
+__pycache__/
+*.py[cod]
+firmware-built/*.bin
+esp-idf/
+idf-tools/
+build-venv/
+*.log
+*.bak
+.env
+.env.*
+secrets.*
+*.pem
+*.key
+Thumbs.db
+.DS_Store
