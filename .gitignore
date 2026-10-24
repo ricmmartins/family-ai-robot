@@ -1,11 +1,11 @@
-work/
-.venv/
+/work/
+/.venv/
 __pycache__/
 *.py[cod]
 firmware-built/*.bin
-esp-idf/
-idf-tools/
-build-venv/
+/esp-idf/
+/idf-tools/
+/build-venv/
 *.log
 *.bak
 .env
