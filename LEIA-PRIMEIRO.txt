@@ -2,7 +2,10 @@ ROBO DE MESA: PACOTE DE MONTAGEM E CODIGO
 Projeto educativo em familia. Robo em ingles, autonomo por Wi-Fi.
 
 Para iniciantes, abra guia-ilustrado-iniciantes.pdf primeiro.
-Depois consulte guia-completo.pdf para a proposta completa.
+Versao ilustrada v0.1.2: 43 paginas, 28 desenhos SVG e uma captura real
+da entrada anonima da nuvem. docs\manual-ilustrado.md tem a mesma sequencia.
+guia-completo.pdf registra a proposta tecnica anterior; para a montagem
+inicial e Windows, seguir o manual ilustrado atualizado.
 O manual visual usa placas fora da protoboard e jumpers femea-macho;
 confira se voce tem esse tipo de cabo e headers ja soldados.
 O desenho de potencia dos servos ainda depende das pecas reais.
@@ -34,21 +37,26 @@ firmware-built\        Binario compilado, hash, configuracao e lockfile.
 build.ps1              Recompila no terminal ESP-IDF 6.0.1, se desejado.
 package_firmware.py    Guarda binario, configuracao, lockfile e hash.
 flash.ps1              Grava o binario compilado na porta COM informada.
+requirements-flash.txt Fixa a ferramenta esptool do ambiente local.
 tests\                 Testes da preparacao e da politica de movimentos.
 VALIDACAO.txt          Evidencias e limites da verificacao realizada.
 NOTICE.txt             Creditos e licenca MIT dos padroes upstream utilizados.
 
 ORDEM NO WINDOWS: USAR O BINARIO INCLUIDO
 1. Extrair o pacote em caminho curto, por exemplo C:\robot.
-2. Usar Python 3.11 ou 3.12. Nao precisa instalar ESP-IDF para gravar.
+2. O PDF explica a instalacao do Python install manager e do Python 3.12:
+   pymanager install 3.12
+   py -V:3.12 --version
+   Nao precisa instalar ESP-IDF para gravar.
 3. Em PowerShell comum, preparar ferramenta isolada:
    Set-Location C:\robot
-   python -m venv .venv
-   .\.venv\Scripts\python.exe -m pip install esptool==5.6.0
+   py -V:3.12 -m venv .venv
+   .\.venv\Scripts\python.exe -m pip install -r requirements-flash.txt
 4. Montar display e audio com tudo DESLIGADO, conforme o PDF.
    Deixar servos e bateria desconectados.
-5. Entrar em modo BOOT e gravar, trocando COM5 pela porta real:
-   powershell -ExecutionPolicy Bypass -File .\flash.ps1 -Port COM5
+5. Identificar a porta COM por desconexao/reconexao. Usar BOOT se necessario
+   e identificar a porta novamente. Gravar, trocando COM7 pela porta real:
+   powershell -ExecutionPolicy Bypass -File .\flash.ps1 -Port COM7
 6. Seguir os pontos de controle do PDF em ordem.
 
 RECOMPILACAO OPCIONAL
@@ -73,3 +81,7 @@ Nunca unir os positivos de fontes diferentes.
 Desligar a fonte dos servos antes de desligar a placa.
 Habilitacao por software NAO substitui corte fisico da energia dos motores.
 Nao existe garantia de 100% nem validacao fisica destas unidades.
+O manual agora explica pratica de solda e contem os desenhos cumulativos
+de 8/17 jumpers, diagnostico e ficha para registrar testes reais.
+Ainda faltam identificar conectores das unidades recebidas, fonte/servos
+e telas autenticadas de ativacao. Nao e um kit pronto/testado em bancada.

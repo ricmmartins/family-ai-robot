@@ -1,11 +1,22 @@
 ESTADO DE VALIDACAO - 24/10/2026
 
 ATUALIZACAO DOCUMENTAL - 28/10/2026
-- Manual visual: 27 paginas e 18 ilustracoes SVG originais.
+- Manual visual v0.1.2: 43 paginas e 28 ilustracoes SVG originais.
+- Novos desenhos cumulativos: oito jumpers do OLED e 17 do nucleo.
+- Reconhecimento de headers/modulos, pratica de solda, cinco etapas
+  Windows, diagnostico e ficha de ensaio. Markdown gerado da mesma fonte.
+- Captura real da entrada publica de xiaozhi.me, sem conta/autenticacao.
+  Menus autenticados de pareamento/configuracao NAO foram inspecionados.
 - Layout proposto: modulos fora da protoboard, fios nas linhas A10-E22.
-- 14 testes Python aprovados, incluindo concordancia dos GPIOs dos
-  desenhos com board\config.h, ausencia de furos duplicados e SVGs validos.
+- 17 testes Python aprovados, incluindo concordancia dos GPIOs dos
+  desenhos com board\config.h, ausencia de furos duplicados, SVGs validos,
+  pontos dos desenhos cumulativos e dependencia de gravacao fixada.
 - Paginas do PDF verificadas quanto a limites e legibilidade por amostras.
+- Ambiente local Windows/Python 3.11: esptool 5.6.0 e opcoes de miniterm
+  conferidos sem placa. Instalacao pelo Python install manager/3.12
+  documentada a partir da fonte oficial, nao executada neste computador.
+- flash.ps1 rejeita pacote sem binario antes de acessar hardware; mensagem
+  agora orienta baixar o ZIP dos Assets, em vez de exigir recompilacao.
 - NAO e teste fisico nem comprovacao de encaixe nas unidades recebidas.
 - Firmware e hash sao os mesmos de 24/10. Nenhuma recompilacao nesta
   atualizacao documental. Conectores/potencia dos servos seguem pendentes.

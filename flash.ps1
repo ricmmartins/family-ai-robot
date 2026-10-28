@@ -9,7 +9,7 @@ $folder = Join-Path $PSScriptRoot 'firmware-built'
 $binary = Join-Path $folder 'robot.bin'
 $manifestPath = Join-Path $folder 'manifest.json'
 if (-not (Test-Path $binary) -or -not (Test-Path $manifestPath)) {
-    throw 'No built firmware package. Complete build.ps1 first.'
+    throw 'Missing built firmware. Extract robo-de-mesa-completo.zip from release Assets. Source code ZIP does not include robot.bin. See the illustrated guide; rebuilding is optional.'
 }
 $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
 $hash = (Get-FileHash $binary -Algorithm SHA256).Hash.ToLowerInvariant()

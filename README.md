@@ -6,8 +6,8 @@ Um robô de mesa construído em família para aprender eletrônica, programaçã
 
 ## Começar
 
-1. **Começar pelo [manual ilustrado para iniciantes, 27 páginas](guia-ilustrado-iniciantes.pdf)**: explica protoboard, continuidade, orientação da XIAO, tipos de jumper e ligações de OLED/áudio, com furos identificados.
-2. Para consultar a proposta completa e os ensaios posteriores, ler o [guia de execução de 16 páginas](guia-completo.pdf).
+1. **Começar pelo [manual ilustrado para iniciantes, 43 páginas](guia-ilustrado-iniciantes.pdf)**: protoboard, materiais, headers, prática de solda, identificação dos módulos, ligações uma a uma, dois desenhos do conjunto completo e cinco etapas de preparação/gravação no Windows.
+2. O [guia de execução de 16 páginas](guia-completo.pdf) registra a proposta técnica anterior. Para a sequência inicial e instalação no Windows, seguir o manual ilustrado atualizado.
 3. Para gravar o firmware compilado, baixar o pacote na página de [releases](https://github.com/ricmmartins/family-ai-robot/releases). O ZIP contém `firmware-built/robot.bin`, o manifesto com SHA256 e os scripts.
 4. Antes de energizar, revisar os pontos de controle do guia e as limitações em [VALIDACAO.txt](VALIDACAO.txt).
 
@@ -15,7 +15,11 @@ O manual ilustrado usa um **layout proposto de distribuição**: XIAO e módulos
 
 ![Como se conectam os furos da protoboard](docs/images/breadboard-basics.svg)
 
-[Ver as ligações ilustradas no navegador](docs/manual-ilustrado.md). A LiPo continua fora do circuito.
+[Ler o manual completo no navegador](docs/manual-ilustrado.md). Ele é gerado da mesma fonte do PDF, para não haver duas sequências divergentes. A LiPo continua fora do circuito.
+
+**Atalhos no PDF:** p. 8, materiais e quantidade de cabos; p. 10–14, headers/solda e reconhecimento dos módulos; p. 20, OLED com os oito fios; p. 27, núcleo com os 17 jumpers; p. 29–33, Windows; p. 35, captura real da entrada da Console; p. 37, diagnóstico; p. 42, ficha de ensaio.
+
+O mapa do amplificador identifica funções, **não a ordem física do AITRIP recebido**. A captura da nuvem foi feita sem login; as telas autenticadas de pareamento/configuração não foram verificadas. Essas lacunas e a alimentação dos servos não são resolvidas inventando posições ou menus.
 
 ## Hardware previsto
 
@@ -50,7 +54,7 @@ O falante liga **entre SPK+ e SPK-**, nunca entre uma saída e GND. Os motores n
 
 ## O que está e não está validado
 
-**Executado:** compilação e link completos, inspeção da imagem ESP32-S3, verificação de tamanho/hash, oito testes Python, teste C++ da política de movimento e análise sintática dos scripts PowerShell.
+**Executado:** compilação e link completos, inspeção da imagem ESP32-S3, verificação de tamanho/hash, 17 testes Python, teste C++ da política de movimento e análise sintática dos scripts PowerShell. A revisão do manual inclui verificação de limites do PDF e inspeção visual das novas figuras.
 
 **Pendente:** gravação na placa real; alimentação, temperatura e estabilidade; display, áudio, câmera e servos; ativação da placa personalizada e visão no backend; rede e autorização da escola.
 
@@ -65,11 +69,12 @@ Compilar não comprova funcionamento físico. Não prometemos 100% de funcioname
 | `build.ps1` | Recompilação opcional com ESP-IDF 6.0.1 |
 | `package_firmware.py` | Empacotamento e manifesto do firmware |
 | `flash.ps1` | Gravação com conferência de identidade/hash |
+| `requirements-flash.txt` | Versão fixada do esptool para o ambiente virtual local |
 | `firmware-built/` | Configuração, manifesto e lockfile da compilação; o `.bin` fica na release |
 | `tests/` | Testes de preparação, empacotamento e política de movimento |
 | `docs/` | Estado do manual ilustrado e decisões do projeto |
 | `make_guide.py`, `make_start_guide.py` | Geradores dos PDFs; exigem PyMuPDF |
-| `make_illustrated_guide.py` | Gera o manual de 27 páginas e os 18 diagramas SVG originais; exige PyMuPDF |
+| `make_illustrated_guide.py` | Gera o PDF de 43 páginas, 28 SVGs originais e o manual Markdown correspondente; exige PyMuPDF |
 
 A [revisão técnica inicial](robo-de-mesa-revisao-tecnica.pdf) é um registro histórico anterior à compilação. Não é o guia atual de montagem.
 

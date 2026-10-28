@@ -16,9 +16,11 @@ Registro em 24 de outubro de 2026.
 | Limites | Coordenadas lógicas -10 a +10, não graus; não há confirmação de posição por sensor |
 | Mecânica | Somente o OLED na cabeça móvel; câmera e XIAO no corpo fixo |
 | Atualização | Firmware pela rede bloqueado para não substituir a pinagem personalizada |
-| Manual | Em 28/10: versão ilustrada de 27 páginas e 18 SVGs, com distribuição A-E e módulos externos; conectores de potência dos servos e orientação das unidades recebidas continuam pendentes |
+| Manual | Em 28/10, v0.1.2: 43 páginas e 28 SVGs, incluindo diagramas cumulativos de 8/17 jumpers, preparação de headers/solda, Windows em cinco etapas, diagnóstico e ficha de ensaio; Markdown e PDF gerados da mesma fonte |
+| Interface da nuvem | Captura real da entrada pública, sem login. Não inventar nomes de menus autenticados; pareamento/voz/visão continuam sem prova de integração |
+| Reconhecimento físico | OLED redesenhado conforme anúncio fornecido, sujeito à conferência da unidade. MAX98357 representado por nomes/funções, não por uma ordem física AITRIP ainda não confirmada |
 | Publicação | Repositório público, sem pedidos, endereços, credenciais ou cópia bruta da conversa |
 
 ## Próxima evidência necessária
 
-Receber a nova placa e fotografar a protoboard e os módulos desligados, com inscrições legíveis. Depois, definir o layout físico e escrever o manual ilustrado. A montagem só será declarada funcional após os testes reais.
+Confirmar a placa recebida e fotografar a protoboard e os módulos desligados, com inscrições legíveis. Usar essas evidências para conferir a orientação dos conectores reais e fechar a alimentação/mecânica dos servos. O manual ilustrado já existe, mas não é comprovação de que um iniciante concluiu a montagem nem de funcionamento físico.

@@ -7,6 +7,7 @@ import fitz
 ROOT = Path(__file__).resolve().parent
 ASSETS = ROOT / "docs" / "images"
 OUTPUT = ROOT / "guia-ilustrado-iniciantes.pdf"
+VERSION = "v0.1.2"
 FONT = "Segoe UI, Arial, sans-serif"
 BLUE, GREEN, YELLOW, RED, GRAY = "#dae8fc", "#d5e8d4", "#fff2cc", "#f8cecc", "#f5f5f5"
 NETS = {
@@ -204,11 +205,37 @@ def power_diagram():
     body += line(545, 110, 545, 145, "#b42318", 3)
     body += rect(485, 145, 120, 25, RED, "#b85450") + text(545, 163, "CORTE FISICO", 10, True, "middle")
     body += line(545, 170, 545, 190, "#b42318", 3)
-    body += line(210, 305, 430, 305, "#333", 3)
-    body += text(320, 293, "GND de referencia comum", 13, True, "middle")
+    body += line(625, 110, 625, 190, "#333", 3)
+    body += text(650, 182, "GND", 11, True, "end")
+    for x1, y1, x2, y2 in [(210, 100, 260, 100), (260, 100, 260, 305),
+                           (260, 305, 400, 305), (400, 305, 400, 100), (400, 100, 430, 100)]:
+        body += line(x1, y1, x2, y2, "#333", 3)
+    body += text(200, 104, "GND", 10, True, "end")
+    body += text(440, 104, "GND", 10, True)
+    body += text(330, 293, "Referencia GND", 13, True, "middle")
     body += text(320, 340, "Corrente dos motores retorna direto a fonte externa.", 13, False, "middle")
     body += text(320, 378, "NAO unir os positivos. LiPo fora do circuito.", 17, True, "middle", "#a61b1b")
     body += text(320, 413, "Diagrama de arquitetura: nao e instrucao para ligar motores agora.", 12, False, "middle")
+    return svg(body)
+
+
+def mechanics_diagram():
+    body = text(340, 26, "PROPOSTA MECANICA: SEM MEDIDAS OU ENCAIXES CONFIRMADOS", 13, True, "middle")
+    body += rect(240, 65, 200, 95, BLUE, "#6c8ebf")
+    body += text(340, 103, "OLED MOVEL", 20, True, "middle")
+    body += text(340, 134, "leve, sem camera", 13, anchor="middle")
+    body += rect(295, 175, 90, 60, YELLOW, "#d6b656")
+    body += text(340, 211, "pan-tilt", 15, True, "middle")
+    body += line(340, 160, 340, 175, "#666", 3)
+    body += line(340, 235, 340, 260, "#666", 3)
+    body += '<path d="M 430 155 C 540 175 510 225 435 265" fill="none" stroke="#2563a6" stroke-width="3"/>'
+    body += text(565, 240, "Folga nos 4 fios", 12, True, "middle")
+    body += rect(65, 260, 550, 125, GREEN, "#82b366")
+    body += text(340, 290, "BASE FIXA, ESTAVEL E NAO CONDUTIVA", 16, True, "middle")
+    body += rect(90, 310, 220, 48, BLUE, "#6c8ebf")
+    body += text(200, 340, "XIAO + CAMERA", 16, True, "middle")
+    body += text(455, 340, "Amplificador + falante", 14, True, "middle")
+    body += text(340, 422, "Nao dimensiona suporte nem libera montagem energizada dos motores.", 12, anchor="middle")
     return svg(body)
 
 
@@ -282,14 +309,133 @@ def jumper_diagram():
     return svg(body)
 
 
+def module_diagram(module):
+    body = text(340, 26, "LER O NOME NO MODULO, NAO ADIVINHAR PELA COR DO FIO", 14, True, "middle")
+    if module == "OLED":
+        body += rect(150, 65, 380, 185, BLUE, "#6c8ebf")
+        body += rect(180, 90, 320, 120, "#1c2834", "#666")
+        body += text(340, 155, "TELA OLED", 26, True, "middle", "#ffffff")
+        for index, name in enumerate(["GND", "VCC", "SCL", "SDA"]):
+            x = 200 + index * 90
+            body += text(x, 238, name, 15, True, "middle")
+            body += rect(x - 5, 250, 10, 40, "#aaa", "#777", 1)
+        body += text(340, 335, "Ordem mostrada na foto do anuncio JAMHER enviado.", 13, True, "middle")
+        body += text(340, 363, "Conferir as letras na SUA unidade; nao e foto da unidade recebida.", 12, anchor="middle")
+        body += text(340, 410, "VCC -> 3V3 | SCL -> D1 | SDA -> D0 | GND -> GND", 14, True, "middle")
+    else:
+        body += rect(100, 65, 480, 275, BLUE, "#6c8ebf")
+        body += text(340, 100, "MAX98357: MAPA DE NOMES", 18, True, "middle")
+        for index, (name, value) in enumerate([
+            ("VIN", "alimentacao"), ("GND", "terra"), ("BCLK", "clock"),
+            ("LRC / LRCK", "canal"), ("DIN", "dados")]):
+            y = 145 + index * 37
+            body += text(125, y, name, 15, True)
+            body += text(270, y, value, 13)
+        body += rect(410, 145, 130, 135, YELLOW, "#d6b656")
+        body += text(475, 185, "SPK+", 16, True, "middle")
+        body += text(475, 225, "SPK-", 16, True, "middle")
+        body += text(340, 375, "Caixas agrupam funcoes: NAO sao a ordem fisica dos pinos AITRIP.", 12, True, "middle")
+        body += text(340, 405, "Se nao encontrar as inscricoes, nao ligar ate identificar a unidade.", 12, anchor="middle")
+    return svg(body)
+
+
+def headers_diagram():
+    body = text(340, 28, "ANTES DO PRIMEIRO JUMPER: O HEADER PRECISA ESTAR SOLDADO", 14, True, "middle")
+    body += rect(25, 70, 300, 290, GREEN, "#82b366")
+    body += text(175, 103, "CORTE LATERAL GENERICO", 13, True, "middle")
+    body += rect(70, 195, 205, 18, BLUE, "#6c8ebf", 1)
+    body += text(175, 285, "PLACA", 13, True, "middle")
+    for x in [110, 175, 240]:
+        body += rect(x - 5, 140, 10, 130, "#aaa", "#777", 1)
+        body += rect(x - 20, 214, 40, 20, "#333", "#333", 2)
+        body += f'<path d="M {x-16} 195 L {x} 174 L {x+16} 195 Z" fill="#aaa" stroke="#666"/>'
+    body += text(175, 305, "Junta une pino + pad da placa.", 12, True, "middle")
+    body += rect(350, 70, 305, 290, RED, "#b85450")
+    body += text(502, 103, "NAO FUNCIONA ASSIM", 13, True, "middle")
+    body += rect(390, 195, 230, 18, BLUE, "#6c8ebf", 1)
+    body += rect(498, 130, 10, 135, "#aaa", "#777", 1)
+    body += text(502, 302, "Pino apenas encostado no furo.", 12, True, "middle")
+    body += text(340, 403, "Confirmar o lado do header para nao bloquear USB, expansao e encaixes.", 12, anchor="middle")
+    return svg(body)
+
+
+def solder_diagram():
+    body = text(340, 26, "TREINAR EM PLACA DE PRATICA, NAO NA XIAO", 16, True, "middle")
+    body += rect(100, 235, 480, 22, BLUE, "#6c8ebf", 1)
+    body += rect(326, 115, 18, 220, "#aaa", "#777", 1)
+    body += '<path d="M 300 235 Q 315 230 326 207 L 344 207 Q 355 230 370 235 Z" fill="#aaa" stroke="#666"/>'
+    body += '<path d="M 70 95 L 110 75 L 326 226 L 307 235 Z" fill="#666" stroke="#333"/>'
+    body += line(535, 105, 350, 218, "#999", 5)
+    body += text(90, 55, "FERRO", 14, True)
+    body += text(495, 82, "SOLDA", 14, True)
+    body += text(340, 365, "Aquecer pino E pad; alimentar a junta, nao so a ponta do ferro.", 13, True, "middle")
+    body += text(340, 404, "Depois: tirar o fio de solda, retirar o ferro e deixar esfriar sem mover.", 12, anchor="middle")
+    return svg(body)
+
+
+def cumulative_diagram(include_amp):
+    wires = [wire for wire in WIRES if include_amp or wire[4] == "OLED"]
+    rows = sorted({wire[2] for wire in wires})
+    body = text(340, 23, "CONJUNTO COMPLETO: DIAGRAMA ELETRICO, NAO FOTO", 14, True, "middle")
+    ports = [("a", row, "") for row in rows] + [(wire[3], wire[2], "") for wire in wires]
+    body += breadboard(rows, ports)
+    right_names = {row: f"{'AMP' if module == 'MAX98357' else module} {pin.split(' / ')[0]}"
+                   for _, _, row, col, module, pin, *_ in wires if col == "b"}
+    for row in rows:
+        a, y = hole("a", row)
+        b, _ = hole("b", row)
+        body += rect(5, y - 10, 164, 20, BLUE, "#6c8ebf", 3)
+        body += text(162, y + 4, "XIAO " + NETS[row][0], 11, True, "end")
+        body += line(169, y, a, y, COLORS[row], 3)
+        body += line(b, y, 484, y, COLORS[row], 2)
+        body += text(490, y + 4, right_names[row], 12, True)
+    if include_amp:
+        c, y = hole("c", 10)
+        body += line(c, y, c, y - 17, COLORS[10], 2)
+        body += line(c, y - 17, 484, y - 17, COLORS[10], 2)
+        body += text(490, y - 13, "AMP GND (C10)", 11, True)
+    body += text(340, 408, "So as pontas entram nos furos. Cruzamentos de fios nao sao emendas.", 12, anchor="middle")
+    body += text(340, 430, "Todos os fios sao mantidos entre etapas. F-J e barramentos ficam vazios.", 11, anchor="middle")
+    return svg(body)
+
+
+def windows_diagram(kind):
+    body = text(340, 26, "DESENHO EXPLICATIVO: NAO E CAPTURA DO SEU COMPUTADOR", 13, True, "middle")
+    body += rect(25, 55, 630, 330, GRAY, "#666")
+    body += rect(25, 55, 630, 40, BLUE, "#6c8ebf")
+    if kind == "files":
+        body += text(45, 80, "Explorador: C:\\robot", 15, True)
+        for i, value in enumerate(["flash.ps1", "requirements-flash.txt", "guia-ilustrado-iniciantes.pdf",
+                                   "firmware-built", "     robot.bin", "     manifest.json"]):
+            body += text(65, 130 + i * 36, value, 15, i in [0, 3, 4])
+        body += text(340, 418, "Se vir outra pasta dentro de C:\\robot, conferir onde ficou flash.ps1.", 12, anchor="middle")
+    elif kind == "com":
+        body += text(45, 80, "Gerenciador de Dispositivos: exemplo", 15, True)
+        for i, value in enumerate(["Computador", "  > Portas (COM e LPT)", "       USB Serial ... (COM7)", "",
+                                   "O numero real pode ser diferente.", "Anote a porta que aparece ao conectar a placa."]):
+            body += text(65, 135 + i * 35, value, 15, i == 2)
+        body += text(340, 418, "COM7 e exemplo. Nao copiar sem conferir a SUA porta.", 13, True, "middle")
+    else:
+        body += text(45, 80, "Sequencia de recuperacao BOOT", 15, True)
+        for i, value in enumerate(["1. Retirar USB; servos e bateria desconectados.",
+                                   "2. Segurar o botao BOOT da placa.",
+                                   "3. Conectar USB de dados mantendo BOOT.",
+                                   "4. Soltar BOOT e procurar a porta COM.",
+                                   "5. Gravar. Depois, pressionar RESET se necessario."]):
+            body += text(50, 140 + i * 43, value, 15)
+        body += text(340, 418, "Identificar BOOT pelas inscricoes; nao pelo lado do desenho.", 12, anchor="middle")
+    return svg(body)
+
+
 PAGES = []
 
 
 def add(title, body, image=None, checkpoint=""):
-    PAGES.append((title, body, image, checkpoint))
+    PAGES.append((re.sub(r"^\d+\. ", "", title), body, image, checkpoint))
 
 
 def compose():
+    PAGES.clear()
     add("Antes de comecar: o que este guia prova",
         "Este e o manual visual da montagem ELETRICA INICIAL: protoboard, OLED, amplificador e falante. "
         "O firmware compilou; nao tenho as pecas em bancada e nao posso comprovar seu funcionamento fisico a distancia.\n\n"
@@ -299,9 +445,27 @@ def compose():
         "A XIAO e os modulos ficarao FORA da protoboard, sobre suporte nao condutivo. "
         "So os fios entram nos furos indicados. Isso evita inventar a posicao de encaixe da placa ou esconder furos debaixo dela.\n\n"
         "Motores: apenas planejamento neste PDF, nao ligacao energizada. LiPo: desconectada em todas as etapas. "
-        "O guia de execucao de 16 paginas continua sendo a referencia para nuvem e ensaios posteriores.\n\n"
+        "O guia de execucao de 16 paginas registra a proposta tecnica anterior. "
+        "Para a sequencia inicial de montagem e Windows, usar este manual atualizado.\n\n"
         "Se sua placa ou os nomes dos pinos diferirem, pare. Nao escolha um pino por parecer estar na posicao do desenho.",
         checkpoint="Pode seguir: leitura e preparacao sem energia. Nao pode: energizar pecas que nao foram conferidas.")
+    add("Roteiro: uma etapa por vez",
+        "COMO USAR: acompanhem a sequencia do PDF, sem saltar etapas. O indice lateral do leitor de PDF permite "
+        "voltar a um assunto. As caixas CONFERENCIA dizem o que deve estar certo antes de avancar.\n\n"
+        "ETAPA A - Sem energia: conhecer a protoboard, conferir conectores e preparar headers. "
+        "Se faltam cabos ou uma solda segura, parar aqui. O ferro de solda pode causar queimaduras; "
+        "nao e uma atividade para fazer sem supervisao e preparo.\n\n"
+        "ETAPA B - Sem energia: montar OLED, depois audio, mantendo todos os fios anteriores. "
+        "Comparar com as duas figuras de conjunto completo.\n\n"
+        "ETAPA C - Computador Windows: extrair arquivos, preparar Python, descobrir a porta e gravar. "
+        "Um comando por vez; nao copiar o 'PS C:\\robot>' de exemplos.\n\n"
+        "ETAPA D - Energia USB: ler logs e conferir display/camera. "
+        "So depois configurar rede e conta. Se surgir erro, registrar o primeiro e parar.\n\n"
+        "ETAPA E - Motores: permanece bloqueada ate identificar fonte, conectores e servos reais. "
+        "Nao usar a LiPo. Nao interpretar o diagrama de alimentacao como autorizacao de montagem.\n\n"
+        "Nao estimamos tempo de montagem. Uma etapa pode terminar em 'falta uma peca' ou 'precisa de ajuda presencial'. "
+        "Isso e um resultado correto, nao motivo para improvisar.",
+        checkpoint="Os resultados esperados sao criterios a testar, nao resultados ja observados nas suas pecas.")
     add("1. Aprender o mapa dos furos",
         "Segure a protoboard com as letras A-J legiveis. Numero = linha; letra = coluna. "
         "A10 significa o furo da coluna A, linha 10. Neste recorte mostramos somente 10 a 22.\n\n"
@@ -347,6 +511,21 @@ def compose():
         "Nao apoiar pinos sobre metal, parafusos ou fios soltos.\n\n"
         "Cores ajudam a organizar, mas nao definem a funcao. Etiquetar as duas pontas de cada fio pelo nome do sinal.",
         checkpoint="Se faltar jumper femea-macho ou header soldado, parar a montagem eletrica nessa peca.")
+    add("Checklist de materiais antes da montagem",
+        "NUCLEO: uma XIAO ESP32-S3 SENSE com expansao e antena; um OLED SH1106; "
+        "um MAX98357; um falante 4 ohms/3 W; uma protoboard A-J com pelo menos 22 linhas.\n\n"
+        "LIGACOES: 17 jumpers femea-macho para OLED e amplificador, mais dois fios adequados para o falante. "
+        "O botao opcional usa mais tres ligacoes. Separe alguns jumpers macho-macho para testar continuidade.\n\n"
+        "FERRAMENTAS: multimetro com continuidade; cabo USB-C de DADOS; computador Windows com internet; "
+        "suporte nao condutivo; etiquetas; descascador de fio apropriado; pequena chave se houver bornes.\n\n"
+        "SE FALTAM HEADERS: barras macho 2,54 mm compativeis, solda eletronica apropriada, "
+        "ferro em suporte, ventilacao/extracao, protecao ocular e placa de treino. "
+        "O kit de solda comprado nao garante que todos os consumiveis e cabos estejam presentes.\n\n"
+        "Nao comprar a fonte dos motores como substituto de um item faltante no nucleo. "
+        "A montagem de motores sera tratada separadamente.\n\n"
+        "Marque na lista: tenho / falta / nao sei identificar. Se marcar 'nao sei', fotografe a peca desligada "
+        "e resolva a identificacao antes de conectar.",
+        checkpoint="Conte 17 cabos femea-macho e confira headers firmes; nao presumir que o pacote de jumpers os inclui.")
     add("Escolher o tipo certo de jumper",
         "O cabo deste desenho tem uma ponta femea e outra macho. "
         "A ponta femea recebe o pino metalico do header; a ponta macho entra no furo da protoboard.\n\n"
@@ -355,6 +534,34 @@ def compose():
         "Se o modulo nao tiver header macho ja soldado, obter a conexao correta antes. "
         "Nao prender um fio solto dentro de um furo metalizado da placa.",
         "jumper-connectors", "Identifique as duas pontas antes de usar o primeiro cabo.")
+    add("Headers: pronto ou ainda sem solda?",
+        "Olhe os contatos com boa luz, sem USB nem bateria. Um pino firme deve atravessar seu furo e ter "
+        "uma junta de solda ligando o metal do pino ao pad (ilha metalica em volta do furo). "
+        "Header e a barra de pinos. Se ha somente furos dourados, falta header.\n\n"
+        "1. Se os headers ja vieram soldados: verificar pinos retos e nenhuma ponte para o vizinho. "
+        "Nao refazer uma solda boa so porque o desenho tem outra aparencia.\n"
+        "2. Se faltam headers: decidir entre ajuda presencial para preparar as pecas ou aprender primeiro na placa de treino.\n\n"
+        "Na XIAO base ha duas fileiras de sete contatos laterais. O OLED do anuncio tem quatro contatos. "
+        "No AITRIP, a quantidade e o lado de insercao precisam ser conferidos na unidade.\n\n"
+        "Antes de soldar, verificar o lado de insercao SEM ENERGIA: depois de montado deve ser possivel "
+        "encaixar o jumper sem bloquear USB, expansao ou componentes. O corte abaixo e generico, "
+        "nao define qual lado soldar em cada placa.",
+        "header-readiness", "Nao soldar com USB, bateria ou expansoes sensiveis ligadas; nao escolher o lado por este desenho.")
+    add("Solda: primeiro treinar, depois preparar",
+        "O adulto deve preparar bancada resistente ao calor, suporte do ferro, ventilacao e protecao ocular. "
+        "Nao comer na bancada. Lavar as maos ao terminar. Manter a bateria longe da area quente.\n\n"
+        "Use uma placa de treino separada e header de sobra; nao comece pela XIAO. "
+        "Usar solda para eletronica, nao fluxo acido de encanamento. "
+        "Seguir temperatura e preparo indicados para o ferro e a liga utilizados; nao adivinhar uma temperatura universal.\n\n"
+        "1. Prender a placa de treino e o header para que nao se movam.\n"
+        "2. Limpar/estanhar a ponta conforme o manual do ferro.\n"
+        "3. Encostar a ponta no pino E no pad. Alimentar pouca solda na junta aquecida.\n"
+        "4. Retirar o fio de solda, depois o ferro. Deixar esfriar sem mover.\n"
+        "5. Inspecionar: junta molha pino e pad, sem bola solta ou ponte para outro pino.\n\n"
+        "Se nao fluir, houver plastico deformado ou precisar insistir aquecendo, parar e pedir ajuda. "
+        "Nao cortar pinos de header que ainda serao usados pelos jumpers. "
+        "Brilho sozinho nao comprova qualidade; algumas ligas ficam foscas.",
+        "solder-practice", "So passar as pecas do robo a solda apos pratica satisfatoria e orientacao do lado correto.")
     add("Localizar os pinos na XIAO",
         "O desenho mostra a placa base pelo lado dos componentes, com USB em cima. "
         "Nao mostra o lado de baixo: olhar por baixo espelha esquerda/direita.\n\n"
@@ -365,6 +572,31 @@ def compose():
         "D4 e audio LRC; D5 sera sinal TILT.\n\n"
         "Se comprar outra placa, como ESP32-S3 Plus ou uma ESP32-CAM, este mapa nao se aplica.",
         "xiao-top-pinout", "D0 e GPIO1 sao nomes do mesmo pino; D1 e GPIO2 tambem.")
+    add("Reconhecer o OLED comprado",
+        "A tela e a regiao escura; os quatro contatos levam alimentacao e dados. "
+        "Na imagem do anuncio fornecida, a ordem e GND, VCC, SCL, SDA. "
+        "O desenho abaixo reproduz essa identificacao, nao uma foto da unidade que chegou.\n\n"
+        "1. Encontrar e ler as quatro inscricoes na placa real, com boa iluminacao.\n"
+        "2. Etiquetar GND, VCC, SCL e SDA nas pontas dos quatro cabos.\n"
+        "3. Se a ordem ou as letras forem diferentes, nao espelhar mentalmente nem usar a ordem por memoria. "
+        "Confirmar os nomes antes de continuar.\n\n"
+        "VCC e o nome da entrada do display; neste projeto ela vai a 3V3. "
+        "SCL leva clock e SDA leva dados. Nao e necessario decorar esses termos: "
+        "seguir a ligacao nome a nome.",
+        "identify-oled", "Nao usar display de seis/sete contatos SPI como substituto deste OLED I2C de quatro contatos.")
+    add("Reconhecer o amplificador comprado",
+        "O MAX98357 e a placa que recebe dados digitais da XIAO e alimenta o falante. "
+        "Localize VIN, GND, BCLK, LRC/LRCK e DIN. Ha tambem duas saidas para o falante.\n\n"
+        "O AITRIP nao tem necessariamente os pinos na ordem de fotos Adafruit. "
+        "Este desenho e um mapa de NOMES e FUNCOES; nao e o desenho fisico da sua unidade.\n\n"
+        "1. Ler frente e verso do modulo sem energia.\n"
+        "2. Fazer etiquetas nos cinco cabos correspondentes.\n"
+        "3. Localizar SPK+ e SPK- sem confundi-los com VIN/GND.\n\n"
+        "Se houver SD, SD_MODE ou GAIN: nao conectar por adivinhacao. "
+        "Uma unidade sem polarizacao apropriada pode ficar muda; isso exige esquema/documentacao do fornecedor.\n\n"
+        "Se nao for possivel identificar essas inscricoes, essa e uma parada obrigatoria. "
+        "Nenhum desenho generico resolve com seguranca uma pinagem desconhecida.",
+        "identify-amplifier", "Encontrou todos os nomes? Pode montar. Nao encontrou? Falta identificar a unidade real.")
     add("6. Preparar o layout escolhido",
         "Nao encaixe XIAO, OLED ou MAX98357 nos furos: eles ficam apoiados e presos fora da protoboard. "
         "Os quadros dos proximos desenhos sao etiquetas dos pinos, NAO a ordem real do conector.\n\n"
@@ -390,16 +622,42 @@ def compose():
             body += "Agora A10 = GND da XIAO, B10 = GND do OLED, C10 = GND do amplificador. Sao tres furos diferentes.\n\n"
         body += "Se o pino nao estiver identificado, pare. Fios cruzados no desenho nao significam conexao; so as pontas entram nos furos marcados."
         add(title, body, name, f"Conferido: {first}; {second}. Continuar com tudo DESLIGADO.")
+        if name == "oled-scl":
+            add("Comparar: OLED com os oito fios",
+                "Nao tirar os fios de uma etapa anterior. Ao terminar o OLED existem oito jumpers: "
+                "quatro saindo da XIAO e quatro saindo do display.\n\n"
+                "No desenho completo: cada linha une um pino da XIAO a um pino do OLED. "
+                "Nao ha conexao entre linhas diferentes. Fios que passam por cima de outros furos nao entram neles.\n\n"
+                "Confira A10/B10, A11/B11, A12/B12 e A13/B13. "
+                "A imagem mostra ligacoes eletricas, nao as posicoes fisicas dos modulos. "
+                "Use a pagina de pinagem da XIAO e as letras do OLED para achar as pontas reais.\n\n"
+                "Ainda nao conectar USB: falta integrar audio e revisar o nucleo.",
+                "complete-oled", "Oito jumpers no total; nenhuma ligacao do display vai para 5V.")
     add("10. Ligar um unico alto-falante",
         "O falante NAO usa as linhas GND, 3V3 ou 5V da protoboard. "
         "Ele recebe dois fios diretamente das saidas do amplificador.\n\n"
-        "1. Ligar um terminal do falante a SPK+ do MAX98357.\n"
-        "2. Ligar o outro terminal do MESMO falante a SPK-.\n"
-        "3. Se houver borne de parafuso: prender apenas o trecho desencapado dentro do borne, "
-        "sem filamentos para fora. Puxar suavemente para conferir que ficou preso.\n\n"
+        "1. Preparar dois fios flexiveis para eletronica. Desencapar apenas o necessario para a conexao, "
+        "com descascador adequado, sem cortar os filamentos. Nao usar chama nem morder a isolacao.\n"
+        "2. Se o falante vier com abas sem fios: soldar um fio por aba, somente apos a pratica de solda. "
+        "Nao encostar o ferro no cone ou na isolacao. Se nao souber prender e soldar essas abas, obter ajuda presencial.\n"
+        "3. Ligar um terminal do falante a SPK+ do MAX98357; o outro terminal a SPK-. "
+        "Se o falante tiver + marcado, usar esse terminal em SPK+.\n"
+        "4. Se houver borne de parafuso no modulo: prender apenas o trecho desencapado, "
+        "sem filamentos para fora. Puxar suavemente para conferir. Se houver apenas furos, "
+        "identificar a conexao/solda apropriada; fio solto encostado nao serve.\n\n"
         "Nao unir os dois terminais, nao ligar SPK- ao GND e nao colocar dois falantes em paralelo. "
         "Se as inscricoes da sua unidade forem outras, confirmar antes de conectar.",
         "speaker-output", "So um falante. Nenhum fio do falante vai ao GND.")
+    add("Conjunto completo: todos os 17 jumpers",
+        "Agora ha oito cabos da XIAO para a protoboard e nove dos modulos para ela: total 17. "
+        "O falante usa dois fios adicionais diretos, mostrados na pagina propria.\n\n"
+        "GND e compartilhado em tres furos diferentes: A10 XIAO; B10 OLED; C10 amplificador. "
+        "Nao colocar dois conectores no mesmo furo.\n\n"
+        "F-J fica vazio. Linhas 14 e 19 ficam vazias. "
+        "A20/A21/A22 ainda nao recebem fios nesta montagem inicial.\n\n"
+        "A linha preta de AMP GND usa C10. Os outros destinos usam B na mesma linha do pino da XIAO. "
+        "Cruzamentos de linhas no desenho nao sao emendas.",
+        "complete-core", "Comparar ponta por ponta, nao apenas se o conjunto tem 'cores parecidas'.")
     add("11. Conferir todos os fios antes do USB",
         "Leia em voz alta e siga cada fio com o dedo, sem energia:\n\n"
         "A10 XIAO GND; B10 OLED GND; C10 MAX98357 GND.\n"
@@ -415,22 +673,80 @@ def compose():
         "Fotografar de cima com as inscricoes legiveis. Se nao souber confirmar uma ligacao, "
         "nao energizar para experimentar. Uma revisao remota da foto tambem nao substitui medicao.",
         "layout-summary", "Sem servos, sem LiPo, sem microSD. Sem pontes de 3V3/5V para GND.")
-    add("12. Gravar o firmware: computador",
-        "Baixar o ZIP da pre-release v0.1.0 de ricmmartins/family-ai-robot. "
-        "Extrair em C:\\robot, sem misturar arquivos de outros tutoriais.\n\n"
-        "Com Python 3.11 ou 3.12 instalado, abrir PowerShell e executar, uma linha por vez:\n\n"
-        "Set-Location C:\\robot\n"
-        "python -m venv .venv\n"
-        ".\\.venv\\Scripts\\python.exe -m pip install esptool==5.6.0\n\n"
-        "Parar se um comando falhar. O binario ja compilou; nao e necessario instalar o SDK para grava-lo.\n\n"
-        "Apos revisao eletrica: conectar somente USB de dados a XIAO, sem motores nem bateria. "
-        "Identificar a porta COM no Gerenciador de Dispositivos. "
-        "Se necessario, com USB desconectado, segurar BOOT, conectar USB e soltar BOOT.\n\n"
-        "Trocar COM5 pela porta real:\n"
-        "powershell -ExecutionPolicy Bypass -File .\\flash.ps1 -Port COM5\n\n"
-        "O script confere SHA256 e grava a imagem mesclada em 0x0. Nao usar o binario AI Pin. "
-        "Em computador gerenciado, seguir as politicas; nao contornar restricoes.",
-        checkpoint="Gravacao sem erro so comprova transferencia. Ainda nao comprova funcionamento do conjunto.")
+    add("Windows 1: baixar e extrair o pacote",
+        "1. No navegador, abrir a release " + VERSION + ":\n"
+        "https://github.com/ricmmartins/family-ai-robot/releases\n"
+        "2. Na lista Assets dessa release, baixar robo-de-mesa-completo.zip. "
+        "NAO escolher 'Source code (zip)': ele nao inclui o binario robot.bin.\n"
+        "3. No Explorador de Arquivos, ir a Downloads. Clicar com botao direito no ZIP e usar "
+        "'Extrair Tudo' / 'Extract All'. Nao executar arquivos dentro da janela do ZIP.\n"
+        "4. Escolher uma pasta nova, curta e permitida, por exemplo C:\\robot. "
+        "Se ela ja tiver arquivos, escolher outra pasta vazia e adaptar todos os comandos do guia.\n\n"
+        "Ao terminar, flash.ps1 e a pasta firmware-built devem estar diretamente na pasta de trabalho. "
+        "Dentro de firmware-built devem existir robot.bin e manifest.json.\n\n"
+        "Se so existir outra subpasta, abrir essa subpasta: esse e o caminho a usar no PowerShell. "
+        "Nao misturar arquivos de releases diferentes.",
+        "windows-files", "Conferir os arquivos pelo nome. Nao precisa instalar ESP-IDF para gravar este binario.")
+    add("Windows 2: abrir PowerShell e Python",
+        "Este roteiro usa Windows com permissao para instalar aplicativos. Em computador escolar/gerenciado, "
+        "pedir autorizacao; nao contornar bloqueios.\n\n"
+        "1. Instalar o Python install manager pelo site oficial ou Microsoft Store, conforme as instrucoes:\n"
+        "https://docs.python.org/3/using/windows.html\n"
+        "2. Fechar terminais antigos. Abrir Iniciar, digitar PowerShell e abrir uma janela comum, "
+        "sem 'Executar como administrador'.\n\n"
+        "3. Digitar cada comando abaixo e pressionar Enter. Esperar o comando acabar e aparecer de novo "
+        "a linha iniciada por PS. Nao digitar o PS: ele e o prompt, nao parte do comando.\n\n"
+        "CMD: pymanager install 3.12\n"
+        "CMD: py -V:3.12 --version\n\n"
+        "Resultado esperado do segundo comando: Python 3.12.x, com x variavel. "
+        "Isso instala/seleciona uma versao compativel sem remover outros Pythons do computador.\n\n"
+        "Se pymanager nao for reconhecido, confirmar que instalou o install manager, nao apenas um "
+        "Python antigo; reabrir o terminal e consultar a secao Troubleshooting da documentacao oficial. "
+        "Se py nao localizar 3.12, nao trocar de versao por tentativa: resolver a instalacao primeiro.",
+        checkpoint="Antes de continuar, py -V:3.12 --version deve funcionar. Nenhuma placa precisa estar conectada.")
+    add("Windows 3: preparar as ferramentas",
+        "Manter a janela PowerShell aberta. Digitar uma linha por vez. "
+        "Se usou outra pasta, substituir C:\\robot pelo caminho real entre aspas.\n\n"
+        "CMD: Set-Location 'C:\\robot'\n"
+        "CMD: Test-Path .\\flash.ps1\n"
+        "CMD: Test-Path .\\firmware-built\\robot.bin\n\n"
+        "Os dois Test-Path devem responder True. False significa pasta/pacote errado, nao defeito da placa.\n\n"
+        "CMD: py -V:3.12 -m venv .venv\n"
+        "CMD: .\\.venv\\Scripts\\python.exe -m pip install -r requirements-flash.txt\n"
+        "CMD: .\\.venv\\Scripts\\python.exe -m esptool version\n\n"
+        "O ultimo comando deve informar esptool 5.6.0. A pasta .venv guarda as ferramentas somente aqui. "
+        "Nao e preciso ativar ambiente virtual, alterar PATH ou mudar a politica global de scripts.\n\n"
+        "Se qualquer linha falhar: parar nessa linha. Guardar o texto do erro. "
+        "Nao copiar uma sequencia inteira presumindo que os passos anteriores deram certo.\n\n"
+        "Erro de rede ao instalar: conferir internet/proxy autorizado. Falta de python.exe dentro de .venv "
+        "indica que a criacao do ambiente nao terminou.",
+        checkpoint="True, True e esptool 5.6.0. Instalar a ferramenta ainda nao testa a placa.")
+    add("Windows 4: descobrir a porta COM",
+        "Primeiro concluir a revisao eletrica; fonte dos servos e LiPo continuam desconectadas.\n\n"
+        "1. Com USB retirado, clicar com botao direito em Iniciar e abrir Gerenciador de Dispositivos "
+        "/ Device Manager. Observar Portas / Ports (COM & LPT), se existir.\n"
+        "2. Conectar a XIAO com cabo USB de DADOS. Observar a porta que apareceu. "
+        "Ela pode ter outro nome e numero, nao necessariamente COM7.\n"
+        "3. Retirar USB e verificar se essa porta desaparece. Reconectar e confirmar novamente.\n\n"
+        "Anotar: MINHA PORTA = COM____. Usar esse valor no lugar de COM7 nas proximas paginas.\n\n"
+        "Se nada aparecer: testar cabo de dados conhecido e outra porta USB. "
+        "Se persistir, usar BOOT como na pagina seguinte. "
+        "Nao baixar drivers de sites aleatorios nem selecionar outra porta que ja existia.",
+        "windows-com", "COM7 no desenho e EXEMPLO. Se nao identificar a sua porta, nao tentar gravar.")
+    add("Windows 5: BOOT e gravacao",
+        "Se a porta normal ja estiver identificada, tentar o comando de gravacao abaixo. "
+        "Se a conexao falhar, entrar em BOOT conforme o desenho e identificar a porta novamente: "
+        "ela pode mudar no modo de gravacao.\n\n"
+        "Trocar COM7 pela porta real. Fechar monitores seriais antes de gravar.\n"
+        "CMD: powershell -ExecutionPolicy Bypass -File .\\flash.ps1 -Port COM7\n\n"
+        "Isso aplica a politica somente ao processo do script, nao permanentemente ao computador. "
+        "Nao usar para contornar politicas de um equipamento gerenciado.\n\n"
+        "O script verifica identidade e SHA256, depois grava a imagem completa em 0x0. "
+        "Nao retirar USB durante a transferencia. Ao terminar deve aparecer "
+        "'Flash transfer complete'. Se falhar: nao declarar gravado; resolver o erro.\n\n"
+        "BOOT e o botao para modo de download e conversa. RESET reinicia a placa. "
+        "Identificar pelas inscricoes/documentacao da unidade, nao pelo lado do desenho.",
+        "windows-boot", "Mensagem final confirma transferencia, nao audio, camera, alimentacao ou ativacao na nuvem.")
     add("13. Primeiro teste energizado",
         "Este teste exige nova XIAO Sense com expansao corretamente encaixada e a montagem eletrica "
         "ja conferida. Se isso ainda nao foi possivel, PARE ANTES DO USB.\n\n"
@@ -438,7 +754,9 @@ def compose():
         "2. Usar cabo USB de dados e fonte/porta adequada. Comecar com audio baixo; "
         "uma porta USB fraca pode nao sustentar os picos do conjunto.\n"
         "3. Abrir o log no PowerShell e pressionar RESET:\n\n"
-        ".\\.venv\\Scripts\\python.exe -m serial.tools.miniterm --rts 0 --dtr 0 COM5 115200\n\n"
+        "CMD: .\\.venv\\Scripts\\python.exe -m serial.tools.miniterm `\n"
+        "CMD:   --rts 0 --dtr 0 COM7 115200\n\n"
+        "Usar a porta real. O acento grave ` ao fim da primeira linha continua o comando na segunda.\n\n"
         "4. Procurar 'SH1106 initialized' e 'Camera ready'. "
         "O display deve mostrar interface sem deslocamento ou corte. Fechar monitor com Ctrl+].\n\n"
         "Se houver calor anormal, cheiro, fumaca, erro fatal ou reinicializacoes: desconectar USB. "
@@ -448,12 +766,26 @@ def compose():
         "Falta de audio deve ser investigada pelos pinos e pela documentacao do modulo AITRIP. "
         "Nao improvisar pontes SD/GAIN.",
         checkpoint="Avancar so com display legivel, camera inicializada e sem resets/aquecimento anormal.")
+    add("Nuvem 1: tela de entrada real",
+        "Pagina publica conferida em 28/10/2026, sem entrar em nenhuma conta. "
+        "O recorte nesta pagina mostra a entrada da Console, nao a tela de pareamento do robo.\n\n"
+        "1. Abrir https://xiaozhi.me/ e clicar Console.\n"
+        "2. O site direciona para login. Na tela observada ha SMS Code, Username & Password "
+        "e Sign in with Google. Escolher um metodo permitido para sua conta; ler termos/privacidade antes de aceitar.\n\n"
+        "Nao escolher +86 por copia do exemplo. Nao compartilhar telefone, senha, SMS, token ou codigo de dispositivo. "
+        "Nenhuma conta foi criada ou autorizada por nos para produzir este manual.\n\n"
+        "Ainda NAO foi inspecionada a area autenticada; os nomes dos menus de pareamento e "
+        "configuracao posteriores nao foram confirmados. Se a interface nao orientar a vinculacao, "
+        "parar e consultar ajuda do servico; nao instalar firmware de outra placa.",
+        "xiaozhi-login-20261028.png", "Captura real de entrada anonima; ativacao do nosso dispositivo continua nao comprovada.")
     add("14. Wi-Fi, voz e foto: testes separados",
         "Usar primeiro a rede domestica 2,4 GHz autorizada. "
         "Seguir o nome da rede e portal mostrados no OLED/log; nao assumir um IP fixo.\n\n"
-        "Abrir xiaozhi.me e seguir o fluxo atual de conta/ativacao usando o codigo do dispositivo. "
-        "Nao publicar senha, token ou codigo de conta. A ativacao desta placa personalizada ainda nao foi testada.\n\n"
-        "Configurar idioma da IA e voz para ingles. Clique curto no BOOT alterna a conversa conforme o estado; "
+        "No primeiro provisionamento, usar as instrucoes mostradas no OLED/log para cadastrar Wi-Fi. "
+        "No portal autenticado, vincular o dispositivo conforme o fluxo do servico, caso seja oferecido para esta placa. "
+        "Nao ha aqui nomes de botoes autenticados confirmados. Se nao houver fluxo compativel, parar nesta etapa.\n\n"
+        "Configurar idioma da IA e voz para ingles quando essas opcoes estiverem disponiveis. "
+        "A interface inglesa do firmware NAO configura a voz da nuvem. Clique curto no BOOT alterna a conversa conforme o estado; "
         "nao ha wake word nesta primeira versao.\n\n"
         "Teste voz: 'Hello. Please answer in English.' Fazer dez interacoes curtas, "
         "confirmando que ela ouve e responde sem reset.\n\n"
@@ -464,6 +796,24 @@ def compose():
         "Se falhar, guardar erro do log; nao trocar fios ao acaso.\n\n"
         "Os testes sao criterios de aceitacao A EXECUTAR. Nao foram feitos remotamente nestas pecas.",
         checkpoint="Registrar separadamente: ativacao; voz; fotografia; descricao. Nao marcar tudo como aprovado de uma vez.")
+    add("Se nao funcionar: diagnostico em ordem",
+        "CALOR, CHEIRO OU FUMACA: retirar USB imediatamente, sem tocar partes quentes. "
+        "Nao insistir, recolocar fios ou energizar para 'ver se passou'.\n\n"
+        "SEM PORTA COM: confirmar cabo de dados e porta USB; tentar BOOT; identificar novamente a porta. "
+        "Porta ocupada: fechar monitor serial e outros aplicativos que a usam.\n\n"
+        "ERRO DE HASH/IDENTIDADE: nao ignorar a verificacao. Baixar novamente o ZIP correto da mesma release. "
+        "Falta robot.bin: provavelmente baixou Source code, nao o pacote dos Assets.\n\n"
+        "SEM DISPLAY: desligar USB; conferir VCC->3V3, GND, SDA->D0 e SCL->D1. "
+        "Pinos D4/D5 de tutoriais I2C genericos NAO sao estes pinos. "
+        "Nao tentar 5V para corrigir tela apagada.\n\n"
+        "CAMERA FAIL: confirmar placa Sense e expansao instalada conforme manual Seeed. "
+        "Identificar sensor real antes de mexer em cabo flat; nao desmontar com energia.\n\n"
+        "OUVE MAS NAO FALA: revisar VIN/GND, D6/BCLK, D4/LRC, D8/DIN e falante SPK+/SPK-. "
+        "Conferir documentacao AITRIP para SD/GAIN. Nao aterrar uma saida do falante.\n\n"
+        "FALA MAS NAO ENXERGA: verificar log e configuracao de visao no backend. "
+        "Isso nao comprova defeito de fio da camera.\n\n"
+        "RESETS AO FALAR: parar e investigar alimentacao/cabos; nao conectar motores para experimentar.",
+        checkpoint="Registrar primeiro erro e etapa. Nao trocar varios fios de uma vez; sempre desligar antes de mexer.")
     add("15. Botao de cabeca: preparacao opcional",
         "Deixar motores e suas fontes desconectados. Se o botao tiver quatro pernas, "
         "primeiro identificar os dois pares com continuidade, fora do circuito e sem energia.\n\n"
@@ -506,6 +856,35 @@ def compose():
         "Proximo objetivo verificavel: ligar o nucleo OLED/audio/camera sem motores e registrar "
         "os resultados individuais da pagina de testes.",
         checkpoint="Nao chamar o robo de funcional ate testar fisicamente cada subsistema e a nuvem.")
+    add("Corpo fixo e cabeca movel",
+        "O desenho mostra somente uma proposta de distribuicao das pecas, nao um molde para cortar nem "
+        "o encaixe exato do pan-tilt recebido.\n\n"
+        "Fixar placas em suporte nao condutivo; proteger a parte inferior e aliviar a tracao dos cabos na base. "
+        "Nao deixar pinos expostos encostarem em metal. Manter lente, microfone e antena desobstruidos.\n\n"
+        "Reservar folga nos quatro fios do OLED. Fios nao podem esticar, prender no eixo ou servir de sustentacao. "
+        "Nao fazer teste de movimento antes de revisar fonte/servos e centralizar sem carga.\n\n"
+        "Para a primeira prova de voz/visao, deixar todas as pecas fixas e os motores desconectados. "
+        "Nao e preciso montar a cabeca para testar esse nucleo.",
+        "fixed-and-moving", "Camera continua fixa. Movimento do OLED nao aponta a camera para outra direcao.")
+    add("Ficha de ensaio: preencher, nao presumir",
+        "DATA: ____________   Placa/camera identificadas: ___________________\n\n"
+        "Marcar cada item como NAO FEITO, PASSOU ou FALHOU; anotar evidencia e erro.\n\n"
+        "Protoboard vazia: continuidade igual ao mapa: _______________________\n"
+        "Headers e 17 cabos revisados sem energia: __________________________\n"
+        "Firmware: transferencia terminou sem erro: _________________________\n"
+        "OLED: texto legivel, sem corte/deslocamento: ________________________\n"
+        "Camera: log Camera ready e sem erro fatal: _________________________\n"
+        "Conta: dispositivo vinculado na nuvem: _____________________________\n"
+        "Microfone + voz: dez conversas curtas sem reset: ____________________\n"
+        "Foto: envio realizado; descricao compativel com objeto: ______________\n"
+        "Alimentacao: sem resets, cheiro ou calor anormal: ___________________\n"
+        "Motores: NAO ENSAIADOS enquanto a etapa estiver bloqueada.\n\n"
+        "Se precisar de revisao: foto geral de cima e fotos de frente/verso dos modulos, tudo desligado; "
+        "nomes dos pinos legiveis; primeiro erro do log, sem credenciais. "
+        "Nao incluir rostos, documentos pessoais ou recibos.\n\n"
+        "Esta ficha separa o que foi observado do que ainda e uma proposta. "
+        "Nem passar todos os itens substitui ensaios de corrente/temperatura ou aprova uso escolar.",
+        checkpoint="Nao preencher PASSOU por ter lido o guia. Precisa ter observado o resultado na montagem.")
     add("18. Fontes e significado das cores",
         "Desenhos originais gerados para este projeto em 28/10/2026. "
         "Sao diagramas de ligacao, nao fotos nem certificacao de seguranca.\n\n"
@@ -517,6 +896,11 @@ def compose():
         "https://wiki.seeedstudio.com/xiao_esp32s3_getting_started/\n\n"
         "Saida do MAX98357, referencia funcional; conferir AITRIP real:\n"
         "https://learn.adafruit.com/adafruit-max98357-i2s-class-d-mono-amp/pinouts\n\n"
+        "Pratica e preparo de solda:\n"
+        "https://learn.adafruit.com/adafruit-guide-excellent-soldering/preparation\n"
+        "https://learn.adafruit.com/adafruit-guide-excellent-soldering/making-a-good-solder-joint\n\n"
+        "Instalacao Python no Windows:\n"
+        "https://docs.python.org/3/using/windows.html\n\n"
         "Software e codigo exato dos pinos do projeto:\n"
         "https://github.com/ricmmartins/family-ai-robot\n\n"
         "Base de software:\n"
@@ -528,6 +912,9 @@ def compose():
 def wrap(value, width, size):
     result = []
     for paragraph in value.splitlines():
+        if paragraph.startswith("CMD: "):
+            result.append(paragraph)
+            continue
         current = ""
         for word in paragraph.split():
             trial = (current + " " + word).strip()
@@ -543,6 +930,34 @@ def wrap(value, width, size):
     return result
 
 
+def write_online_manual():
+    lines = ["# Manual ilustrado para iniciantes", "",
+             f"**[{VERSION}: abrir o PDF de {len(PAGES)} paginas](../guia-ilustrado-iniciantes.pdf)**. "
+             "Este manual e gerado da mesma fonte do PDF, com a mesma sequencia e conferencias.", "",
+             "**Hardware e ativacao ainda nao testados.** Sao diagramas propostos, "
+             "nao fotos da montagem real. Motores e LiPo nao estao liberados para montagem energizada.", ""]
+    for index, (title, body, image, checkpoint) in enumerate(PAGES, 1):
+        lines += [f"## {index}. {title}", ""]
+        if image:
+            path = image if image.endswith(".png") else f"{image}.svg"
+            lines += [f"![{title}](images/{path})", ""]
+        in_code = False
+        for paragraph in body.splitlines():
+            command = paragraph.startswith("CMD: ")
+            if command and not in_code:
+                lines += ["", "```powershell"]
+            elif in_code and not command:
+                lines += ["```", ""]
+            lines.append(paragraph[5:] if command else paragraph)
+            in_code = command
+        if in_code:
+            lines += ["```"]
+        if checkpoint:
+            lines += ["", "**Conferencia:** " + checkpoint]
+        lines += [""]
+    (ROOT / "docs" / "manual-ilustrado.md").write_text("\n".join(lines), encoding="utf-8")
+
+
 def generate():
     ASSETS.mkdir(parents=True, exist_ok=True)
     drawings = {
@@ -555,6 +970,16 @@ def generate():
         "separate-power": power_diagram(),
         "xiao-top-pinout": xiao_diagram(),
         "jumper-connectors": jumper_diagram(),
+        "header-readiness": headers_diagram(),
+        "solder-practice": solder_diagram(),
+        "identify-oled": module_diagram("OLED"),
+        "identify-amplifier": module_diagram("MAX98357"),
+        "complete-oled": cumulative_diagram(False),
+        "complete-core": cumulative_diagram(True),
+        "windows-files": windows_diagram("files"),
+        "windows-com": windows_diagram("com"),
+        "windows-boot": windows_diagram("boot"),
+        "fixed-and-moving": mechanics_diagram(),
     }
     for name, _, row, col, module, pin, _, _, reuse in WIRES:
         drawings[name] = wire_diagram(row, col, module, pin, reuse)
@@ -570,23 +995,39 @@ def generate():
         page.insert_text((42, 43), title, fontsize=18, fontname="hebo", color=(0.04, 0.25, 0.36))
         y = 70
         if image:
-            with fitz.open(ASSETS / f"{image}.svg") as vector:
+            path = ASSETS / (image if image.endswith(".png") else f"{image}.svg")
+            with fitz.open(path) as vector:
                 with fitz.open("pdf", vector.convert_to_pdf()) as rendered:
-                    page.show_pdf_page(fitz.Rect(35, 60, 560, 400), rendered, 0)
+                    clip = None
+                    if path.suffix == ".png":
+                        bounds = rendered[0].rect
+                        clip = fitz.Rect(bounds.width * .272, bounds.height * .05,
+                                         bounds.width * .73, bounds.height * .71)
+                    page.show_pdf_page(fitz.Rect(35, 60, 560, 400), rendered, 0, clip=clip)
             y = 414
         lines = wrap(body, 507, 10.5)
         for value in lines:
             if y > 743:
                 raise ValueError(f"Page body overflow: {index + 1}, {title}")
-            page.insert_text((44, y), value, fontsize=10.5)
+            if value.startswith("CMD: "):
+                command = value[5:]
+                if fitz.get_text_length(command, fontsize=9, fontname="cour") > 507:
+                    raise ValueError(f"Command overflow: {command}")
+                page.draw_rect(fitz.Rect(40, y - 10, 555, y + 4), fill=(.94, .96, .98), color=None)
+                page.insert_text((44, y), command, fontsize=9, fontname="cour")
+            else:
+                page.insert_text((44, y), value, fontsize=10.5)
             y += 14
+        for url in set(re.findall(r"https?://[^\s]+", body)):
+            for bounds in page.search_for(url):
+                page.insert_link({"kind": fitz.LINK_URI, "from": bounds, "uri": url})
         if checkpoint:
             bounds = fitz.Rect(36, 758, 559, 801)
             page.draw_rect(bounds, fill=(1, 0.95, 0.80), color=(0.84, 0.72, 0.34))
             fit = page.insert_textbox(bounds + (8, 6, -8, -4), "CONFERENCIA: " + checkpoint, fontsize=9.5)
             if fit < 0:
                 raise ValueError(f"Checkpoint overflow: {title}")
-        page.insert_text((42, 824), "FAMILY AI ROBOT | Manual visual | 28/10/2026 | Hardware ainda nao testado", fontsize=8)
+        page.insert_text((42, 824), f"FAMILY AI ROBOT | {VERSION} | 28/10/2026 | Hardware ainda nao testado", fontsize=8)
         page.insert_text((514, 824), f"{index + 1}/{len(PAGES)}", fontsize=8)
     document.set_toc([[1, title, index + 1] for index, (title, _, _, _) in enumerate(PAGES)])
     document.set_metadata({"title": "Family AI Robot - Guia ilustrado para iniciantes", "author": "Family AI Robot"})
@@ -600,8 +1041,12 @@ def generate():
                     for span in entry["spans"]:
                         x0, y0, x1, y1 = span["bbox"]
                         assert 0 <= x0 < x1 <= 595 and 0 <= y0 < y1 <= 842, (index, span)
-        for index in [1, 7, 9, 12]:
-            check[index].get_pixmap(matrix=fitz.Matrix(1.2, 1.2)).save(ASSETS / f"preview-{index + 1}.png")
+        for index, (_, _, image, _) in enumerate(PAGES):
+            if image in {"complete-core", "complete-oled", "solder-practice", "header-readiness",
+                         "identify-amplifier", "identify-oled", "windows-com",
+                         "xiaozhi-login-20261028.png", "separate-power", "fixed-and-moving"}:
+                check[index].get_pixmap(matrix=fitz.Matrix(1.5, 1.5)).save(ASSETS / f"preview-{index + 1}.png")
+    write_online_manual()
     print(f"{OUTPUT}: {len(PAGES)} pages, {len(drawings)} SVG illustrations; layout checks passed")
 
 
