@@ -16,7 +16,7 @@ Registro em 24 de outubro de 2026.
 | Limites | Coordenadas lógicas -10 a +10, não graus; não há confirmação de posição por sensor |
 | Mecânica | Somente o OLED na cabeça móvel; câmera e XIAO no corpo fixo |
 | Atualização | Firmware pela rede bloqueado para não substituir a pinagem personalizada |
-| Manual | Precisa ser refeito para iniciantes, com peças reais e uma ligação por imagem |
+| Manual | Em 28/10: versão ilustrada de 27 páginas e 18 SVGs, com distribuição A-E e módulos externos; conectores de potência dos servos e orientação das unidades recebidas continuam pendentes |
 | Publicação | Repositório público, sem pedidos, endereços, credenciais ou cópia bruta da conversa |
 
 ## Próxima evidência necessária

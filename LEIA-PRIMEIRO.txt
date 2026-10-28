@@ -1,7 +1,12 @@
 ROBO DE MESA: PACOTE DE MONTAGEM E CODIGO
 Projeto educativo em familia. Robo em ingles, autonomo por Wi-Fi.
 
-Abra guia-completo.pdf primeiro. Este pacote substitui o procedimento
+Para iniciantes, abra guia-ilustrado-iniciantes.pdf primeiro.
+Depois consulte guia-completo.pdf para a proposta completa.
+O manual visual usa placas fora da protoboard e jumpers femea-macho;
+confira se voce tem esse tipo de cabo e headers ja soldados.
+O desenho de potencia dos servos ainda depende das pecas reais.
+Este pacote substitui o procedimento
 original da Muse.Ai; nao misture a pinagem dos dois documentos.
 
 Versao final proposta:

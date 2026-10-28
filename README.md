@@ -6,12 +6,16 @@ Um robô de mesa construído em família para aprender eletrônica, programaçã
 
 ## Começar
 
-1. Para preparar peças e bancada, ler [O que já podemos fazer](robo-comecem-por-aqui.pdf). Essa etapa é **sem energia**.
-2. Para consultar a proposta completa, ler o [guia de execução de 16 páginas](guia-completo.pdf).
+1. **Começar pelo [manual ilustrado para iniciantes, 27 páginas](guia-ilustrado-iniciantes.pdf)**: explica protoboard, continuidade, orientação da XIAO, tipos de jumper e ligações de OLED/áudio, com furos identificados.
+2. Para consultar a proposta completa e os ensaios posteriores, ler o [guia de execução de 16 páginas](guia-completo.pdf).
 3. Para gravar o firmware compilado, baixar o pacote na página de [releases](https://github.com/ricmmartins/family-ai-robot/releases). O ZIP contém `firmware-built/robot.bin`, o manifesto com SHA256 e os scripts.
 4. Antes de energizar, revisar os pontos de controle do guia e as limitações em [VALIDACAO.txt](VALIDACAO.txt).
 
-**O guia atual ainda não é o manual ilustrado para quem nunca montou um circuito.** Esse manual está [em preparação](docs/manual-ilustrado.md). Não há posições de furos da protoboard aprovadas; precisamos conferir as peças reais e suas orientações antes de desenhá-las.
+O manual ilustrado usa um **layout proposto de distribuição**: XIAO e módulos ficam fora da protoboard, ligados por jumpers fêmea-macho. Os furos A10–E22 devem ser conferidos na protoboard real antes do uso. Não é uma montagem testada. O desenho final dos conectores de potência dos servos ainda depende de identificar as unidades recebidas.
+
+![Como se conectam os furos da protoboard](docs/images/breadboard-basics.svg)
+
+[Ver as ligações ilustradas no navegador](docs/manual-ilustrado.md). A LiPo continua fora do circuito.
 
 ## Hardware previsto
 
@@ -65,6 +69,7 @@ Compilar não comprova funcionamento físico. Não prometemos 100% de funcioname
 | `tests/` | Testes de preparação, empacotamento e política de movimento |
 | `docs/` | Estado do manual ilustrado e decisões do projeto |
 | `make_guide.py`, `make_start_guide.py` | Geradores dos PDFs; exigem PyMuPDF |
+| `make_illustrated_guide.py` | Gera o manual de 27 páginas e os 18 diagramas SVG originais; exige PyMuPDF |
 
 A [revisão técnica inicial](robo-de-mesa-revisao-tecnica.pdf) é um registro histórico anterior à compilação. Não é o guia atual de montagem.
 

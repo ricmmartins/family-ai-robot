@@ -1,5 +1,15 @@
 ESTADO DE VALIDACAO - 24/10/2026
 
+ATUALIZACAO DOCUMENTAL - 28/10/2026
+- Manual visual: 27 paginas e 18 ilustracoes SVG originais.
+- Layout proposto: modulos fora da protoboard, fios nas linhas A10-E22.
+- 14 testes Python aprovados, incluindo concordancia dos GPIOs dos
+  desenhos com board\config.h, ausencia de furos duplicados e SVGs validos.
+- Paginas do PDF verificadas quanto a limites e legibilidade por amostras.
+- NAO e teste fisico nem comprovacao de encaixe nas unidades recebidas.
+- Firmware e hash sao os mesmos de 24/10. Nenhuma recompilacao nesta
+  atualizacao documental. Conectores/potencia dos servos seguem pendentes.
+
 EXECUTADO
 - Leitura das 11 paginas do PDF original.
 - Consulta de documentacao Seeed, Adafruit, Espressif e fontes XiaoZhi.
